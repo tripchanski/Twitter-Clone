@@ -5,8 +5,18 @@ import { connectDB } from './config/db.js';
 
 const app = express();
 
-connectDB();
-
 app.get('/', (req, res) => res.send('API is running...'));
 
-app.listen(ENV.PORT, () => console.log('Server running on PORT:', ENV.PORT));
+const startServer = async () => {
+    try {
+        await connectDB();
+        app.listen(ENV.PORT, () => {
+            console.log(`Server running in ${ENV.NODE_ENV} mode on port ${ENV.PORT}`);
+        });
+    } catch (error) {
+        console.error('Failed to start server:', error);
+        process.exit(1);
+    }
+};
+
+startServer();
